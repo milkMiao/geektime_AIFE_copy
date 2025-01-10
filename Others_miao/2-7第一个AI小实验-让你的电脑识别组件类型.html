@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser-based Neural Network</title>  
+    <script src="//unpkg.com/brain.js"></script> 
+    <!-- <script src="./brain.js"></script> -->
+</head>
+<body>
+    <h1>第二章：视觉AI入门《7-第一个AI小实验：让你的电脑识别组件类型》</h1>
+    <a href="https://static001.geekbang.org/resource/image/7e/32/7eb70b3767165a5a56dff3821c0d4d32.jpg?wh=4583x3171">案例使用图片地址</a>
+    <div>
+        <h2>五大步骤</h2>
+        <ol>
+            <li>问题定义</li>
+            <li>数据收集</li>
+            <li>数据处理</li>
+            <li>模型训练</li>
+            <li>模型预测</li>
+        </ol>
+    </div>
+
+    <input type="file" id="trainFiles" multiple>  
+    <input type="file" id="testFile"> 
+
+    <button id="trainButton">Train Model</button>  
+    <button id="testButton">Test Model</button>
+
+    <script>
+        document.getElementById('trainButton').addEventListener('click', async () => { 
+            const trainFiles = document.getElementById('trainFiles').files;
+            console.log('trainFiles======1',trainFiles);
+
+            const trainData = await loadTrainData(trainFiles); 
+            console.log('trainData======2',trainData);
+
+            const net = await trainModel(trainData); 
+            window.net = net;  // Save the trained model to the global scope
+        });
+
+        document.getElementById('testButton').addEventListener('click', async () => {
+            const testFile = document.getElementById('testFile').files[0];
+            if(window.net) {
+                const result = await testModel(window.net, testFile);  // 传入 net 参数
+                console.log(result);
+            } else {
+                console.log('Please train the model first!');
+            }
+        });
+
+        //1、问题定义
+        // 问题：识别图片中的组件类型
+
+        //数据加载函数 【用于处理图片文件并将其转换为--神经网络可用数据的异步函数】
+        //2、数据收集
+        const loadImageData = (file) => {
+            return new Promise((resolve, reject) => {
+                // Load the image data from the file
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        // Draw the image onto a canvas and extract the pixel data
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 28;
+                        canvas.height = 28;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, 28, 28);
+                        const imageData = ctx.getImageData(0, 0, 28, 28);
+                        const data = [];
+                        for (let i = 0; i < imageData.data.length; i += 4) {
+                            data.push(imageData.data[i] / 255); // Normalize the pixel value
+                        }
+                        resolve(data);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                // Read the file as a data URL
+                reader.readAsDataURL(file);
+            });
+        };
+
+        //3、数据处理
+        const loadTrainData = async (files) => {
+            const trainData = [];
+            const categories = ['text', 'input', 'button'];
+
+            for (const file of files) {
+                // Find the category of the file by its name
+                const category = categories.find(cat => file.name.includes(cat));
+                if (category) {
+                    // Load image data by the funtion:loadImageData we defined before
+                    const imageData = await loadImageData(file);
+                    if (imageData) {
+                        trainData.push({
+                            input: imageData,
+                            output: { [category]: 1 }
+                        });
+                    } else {
+                        console.error(`Failed to load image data for file: ${file.name}`);
+                    }
+                } else {
+                    console.error(`No category found for file: ${file.name}`);
+                }
+            }
+
+            // Return the loaded training data
+            return trainData;
+        };
+
+        //4、模型训练
+        const trainModel = async (trainData) => {
+         //使用 brain.js 库创建一个基础的神经网络模型（多层感知器）
+            const net = new brain.NeuralNetwork();
+            net.train(trainData, {
+                iterations: 4500, //训练迭代次数，这里是 4500 次。
+                log: (details) => {
+                    console.log(details); //日志回调函数，在每次迭代后记录训练详情，这里会将详情打印到控制台
+                },
+                logPeriod: 1, //控制日志输出频率，值为 1 表示每次迭代都输出日志。
+                learningRate: 0.01 //学习率，决定了权重更新的速度，较小的学习率可以使训练过程更稳定，这里我们设置为 0.01。
+            });
+           return net;
+        };
+
+        //5、模型预测
+        const testModel = async (net, file) => {
+            const testImageData = await loadImageData(file);
+            const output = net.run(testImageData);
+            console.log(`Prediction: ${JSON.stringify(output)}`);
+            return output; // 返回预测结果 Prediction: {"input":0.9300332069396973}
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+
+    <h1>第二章：视觉AI入门《8-前端应该懂的AI数学知识》</h1>
+    <div>
+        <h2>1. NumJS</h2>
+        <div>
+            NumJS 是一个轻量级的 JavaScript 库，提供了一系列类似 MATLAB 的数学函数，专为大规模数值计算设计的。
+            它支持多维数组和矩阵运算，适用于浏览器和 Node.js 环境。
+        </div>
+
+        <h2>2. TensorFlow.js</h2>
+        <div>
+            TensorFlow.js 是 Google 开发的一个 JavaScript 库，它使开发者能够在浏览器和 Node.js 中直接运行 TensorFlow 模型。
+            它不仅支持强大的矩阵和张量运算，还集成了机器学习模型构建、训练和推理功能，非常适合深度学习应用。
+        </div>
+
+        <h2>3. mathJS</h2>
+        <div>
+            mathJS 是一个全面的数学库，提供了从基础数学到高级数学的各种功能，包括代数、几何、概率、统计等。
+            它支持多种数据类型，如数字、大数、分数、复数、矩阵等，非常适合进行精确的科学计算。
+        </div>
+
+
+        <script>
+            
+            //1、NumJS例子
+            // const nj = require('numjs'); 
+            let A = nj.array([[1, 2], [3, 4]]);
+            let B = nj.array([[5, 6], [7, 8]]); 
+            let C = nj.dot(A, B); // 矩阵乘法
+            console.log('numJS',C.tolist()); // 输出矩阵乘法的结果  
+
+            //2、TensorFlow.js例子
+            const a = tf.tensor([1, 2, 3, 4]);
+            const b = tf.tensor([5, 6, 7, 8]);
+            const c = tf.add(a, b);
+            console.log('TensorFlowJS',c.dataSync()); // 输出加法的结果
+
+            //3、mathJS例子
+            // const math = require('mathjs');
+            const A1 = math.matrix([[1, 2], [3, 4]]);
+            const B1 = math.matrix([[5, 6], [7, 8]]); 
+            const C1 = math.multiply(A1, B1); // 矩阵乘法
+            console.log('mathJS1', math.format(C1)); // 格式化输出矩阵乘法的结果
+
+            const v = math.vector([3, 1, 4]);
+            const w = math.vector([1, 5, 9]);
+            const sum = math.add(v, w);
+            console.log('mathJS2',sum); // 输出: [4, 6, 13]  
+        </script>
+    </div>
+</body>
+</html>

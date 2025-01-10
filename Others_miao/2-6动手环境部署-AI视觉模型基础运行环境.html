@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>-->
+    <script src="//unpkg.com/brain.js"></script> 
+
+    <h1>第二章：视觉AI入门《6-动手环境部署：AI视觉模型基础运行环境》</h1>
+    <div>
+        极客时间
+        <a href="https://time.geekbang.org/column/intro/100825201?tab=catalog"> 前端工程师的 AI 实战课 </a>
+    </div>
+    <div>
+        <h2>第二章：视觉AI入门(16讲)</h2>
+        <h3>1. 使用brain.js 训练模型</h3>
+        <div>
+            Brain.js 是一个用 JavaScript 编写的库，
+            它让开发者能够在浏览器和 Node.js 环境中轻松地【创建和训练神经网络】。
+            这意味着你可以用它来实现机器学习功能，比如图像识别或语言理解。
+            它设计得非常简单，即使是没有深度学习背景的开发者也能快速上手。
+        </div>
+
+        <h3>2. 使用tensorflow.js 加载模型</h3>  
+        <div>
+            TensorFlow.js 是一个开源的 JavaScript 库，用于在浏览器和 Node.js 上训练和运行机器学习模型。
+            它允许开发者直接在前端应用中【集成深度学习模型】，无需依赖后端。
+            这意味着你可以在网页上实现实时的图像识别、文本理解等 AI 功能。
+        </div>
+
+        <h3>3. 使用gpu.js 加速模型</h3>
+        <div>
+            GPU.js 是一个用于在浏览器中进行 GPU 加速计算的 JavaScript 库。
+            它允许开发者利用 GPU 的强大计算能力来加速复杂的数学运算，从而提高性能。
+        </div>
+    </div>
+
+    <script>
+        //1、 (准备训练数据)prepare training data
+        const data = [
+            { "input": "implementing a caching mechanism improves performance", "output": "backend" },
+            { "input": "hover effects on buttons", "output": "frontend" }, 
+            { "input": "optimizing SQL queries", "output": "backend" }, 
+            { "input": "using flexbox for layout", "output": "frontend" }, 
+            { "input": "setting up a CI/CD pipeline", "output": "backend" },
+            { "input": "SVG animations for interactive graphics", "output": "frontend" }, 
+            { "input": "authentication using OAuth", "output": "backend" }, 
+            { "input": "responsive images for different screen sizes", "output": "frontend" }, 
+            { "input": "creating REST API endpoints", "output": "backend" }, 
+            { "input": "CSS grid for complex layouts", "output": "frontend" }, 
+            { "input": "database normalization for efficiency", "output": "backend" }, 
+            { "input": "custom form validation", "output": "frontend" }, 
+            { "input": "implementing web sockets for real-time communication", "output": "backend" }, 
+            { "input": "parallax scrolling effect", "output": "frontend" }, 
+            { "input": "securely storing user passwords", "output": "backend" }, 
+            { "input": "using web workers for background processing", "output": "frontend" }, 
+            { "input": "optimizing CSS for better rendering performance", "output": "backend" }, 
+            { "input": "implementing lazy loading for improved page performance", "output": "frontend" } 
+        ];
+
+        //2、 (创建循环神经网络) Create a recurrent neural network 
+        //brain.recurrent - brain.js 库中的循环神经网络模块， LSTM - 长短期记忆网络的具体实现
+        const network = new brain.recurrent.LSTM();
+
+        //3、 (训练模型) Train the network 
+        // 由于 network.train() 是一个耗时的操作，我们应该在训练完成后再进行预测。
+        network.train(data, { 
+            iterations: 2000,
+            log: true, 
+            logPeriod: 100 
+        });
+
+        //4、 (使用模型-做预测) Make a prediction
+        const result = network.run("data access layer is not presentation layer");
+        console.log(`Category: ${result}`);
+
+        //打印结果：
+        // brain.js:27259 iterations: 0, training error: 0.5371002694929131
+        // brain.js:27259 iterations: 100, training error: 0.013581145570708643
+        // brain.js:27259 iterations: 200, training error: 0.012271846061759357
+        // brain.js:27259 iterations: 300, training error: 0.011418335134786912
+        // brain.js:27259 iterations: 400, training error: 0.05231921469012965
+        // brain.js:27259 iterations: 500, training error: 0.012010688130768565
+        // brain.js:27259 iterations: 600, training error: 0.011085038367141467
+        // brain.js:27259 iterations: 700, training error: 0.011619115819601638
+        // brain.js:27259 iterations: 800, training error: 0.010996442907166396
+        // brain.js:27259 iterations: 900, training error: 0.011210413645973569
+        // brain.js:27259 iterations: 1000, training error: 0.011397732110144153
+        // brain.js:27259 iterations: 1100, training error: 0.036045510861574315
+        // brain.js:27259 iterations: 1200, training error: 0.011616070230359585
+        // brain.js:27259 iterations: 1300, training error: 0.011181372252558098
+        // brain.js:27259 iterations: 1400, training error: 0.011593275146237592
+        // brain.js:27259 iterations: 1500, training error: 0.011091576590311656
+        // brain.js:27259 iterations: 1600, training error: 0.011014165410669768
+        // brain.js:27259 iterations: 1700, training error: 0.011137962817510234
+        // brain.js:27259 iterations: 1800, training error: 0.011015502250090379
+        // brain.js:27259 iterations: 1900, training error: 0.014339964840535013
+        // Category: Vyccrordsfrontend
+        // Category:  chalim valf aydp raem Anebeng CS ife bettendpiring cSQL queriesbackend
+    </script>
+</body>
+</html>

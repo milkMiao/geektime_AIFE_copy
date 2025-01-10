@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jimp/browser/lib/jimp.min.js"></script> -->
+</head>
+<body>
+    <h1>第三章：组识别助手：从组件识别到自动出码 (6讲)</h1>
+    <h2>3.9 《数据集：如何为模型寻找制作数据集？》</h2>
+
+   
+    <h3>1、数据增广实例 1:滤波（模糊）处理</h3>
+    <div>滤波处理主要是让图像变得模糊，提取图像的重要信息。
+        常见的模糊处理有：高斯模糊，中值模糊，均值（椒盐）模糊。
+        卷积核大小一般为奇数: (3,3)、(5,5)、(7,7)。示例代码如下：
+    </div>
+
+    <h3>2、数据增广实例 2:翻转处理</h3>
+    <div>翻转处理就是将图像沿水平轴、垂直轴进行翻转，使得图像的左侧变为右侧，右侧变为左侧。示例代码如下： </div>
+
+    <h3>3、数据增广实例 3:亮度调整</h3>
+    <div>亮度的调整也很常见，我们可以模拟不同光照条件下的图像变化。示例代码如下： </div>
+
+    <h3>4、数据增广实例 4:裁剪处理</h3>
+    <div>从原始图像中选择一个特定的区域，并将其作为新的图像。示例代码如下： </div>
+
+    <h3>5、数据增广实例 5:旋转处理</h3>
+    <div>此外，将原始图像按照一定角度进行旋转，也能生成新的图像。示例代码如下： </div>
+
+
+    <script>
+        // 1、数据增广实例 1：滤波（模糊）处理
+        const blurImage = (inputPath, outputPath, radius) => {
+            Jimp.read(inputPath) // 读取输入图像的路径
+                .then(image => {
+                    image.blur(radius); // 应用模糊效果，radius 是模糊的强度
+                    image.write(outputPath); // 保存处理后的图像到输出路径
+                })
+                .catch(error => {
+                    console.error(error); // 如果有任何错误，打印到控制台
+                });
+        };
+
+        //2、数据增广实例 2：翻转处理
+        const flipImage = (input, output, horizontal, vertical) => {
+            Jimp.read(input)
+                .then(image => {
+                    image.mirror(horizontal, vertical);
+                    image.write(output);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        //3、数据增广实例 3:亮度调整
+        const brightnessImage = (input, output, brightness) => {
+            Jimp.read(input)
+                .then(image => {
+                    image.brightness(brightness);
+                    image.write(output);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        //4、数据增广实例 4:剪裁
+        const cropImage = (input, output, x, y, w, h) => {
+            Jimp.read(input)
+                .then(image => {
+                    image.crop(x, y, w, h);
+                    image.write(output);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        //5、数据增广实例 5:旋转
+        const rotateImage = (input, output, deg) => {
+            Jimp.read(input)
+                .then(image => {
+                    image.rotate(deg);
+                    image.write(output);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        
+    </script>
+
+</body>
+</html>

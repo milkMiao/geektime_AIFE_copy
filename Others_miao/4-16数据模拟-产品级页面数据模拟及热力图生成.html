@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization with Real H5 Page</title>
+    <!-- 引入 heatmap.js -->
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js"></script>
+</head>
+<body>
+    <div class="content">
+        <!-- <div>
+            <h1>4-16 数据模拟-产品级页面数据模拟及热力图生成</h1>
+            <h2>4-16-1 关键数据指标</h2>
+            <h2>4-16-2 模拟用户行为生成用户数据</h2>
+            <h2>4-16-3 生成热力图</h2>
+            <h2>4-16-4 总结</h2>
+            <h2>4-16-5 思考题</h2>
+        </div> -->
+        <div id="h5Page">
+            <!-- 真实的H5页面内容在这里 -->
+            <p>Your real H5 page content goes here...</p>
+        </div>
+        <div id="heatmapContainer"></div>
+    </div>
+    
+    <script src="./4-16test.js"></script>
+    <script>
+        // 初始化 heatmap 实例
+        const heatmapInstance = h337.create({
+            container: document.getElementById('heatmapContainer'),
+            radius: 20,
+            maxOpacity: 0.8,
+            minOpacity: 0,
+            blur: 0.75,
+        });
+        // 格式化数据为 heatmap.js 需要的格式
+        const heatmapData = {
+            max: 10,
+            data: generateClickData(userIds, clicksPerUser, hotspots, pageWidth).map(click => {
+                const { x, y } = click.clickPosition;
+                return { x, y, value: 1 };
+            })
+        };
+
+        // 设置热力图数据
+        heatmapInstance.setData(heatmapData);
+
+        // 同步滚动逻辑
+        const syncScroll = () => {
+            const scrollTop = window.scrollY;
+            heatmapContainer.style.transform = `translateY(${-scrollTop}px)`;
+        };
+        window.addEventListener('scroll', syncScroll);
+    </script>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            overflow: auto;
+            position: relative;
+        }
+
+        #heatmapContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 390px;
+            height: 5000px;
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        #h5Page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 390px;
+            height: 5000px;
+            z-index: 1;
+        }
+    </style>
+</body>
+</html>
